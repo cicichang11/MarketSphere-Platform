@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MarketSphere - Signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="min-h-screen flex items-center justify-center bg-blue-900 dark:bg-zinc-800">
+        <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8 pt-8 w-96">
+            <h1 class="text-2xl text-center mb-4">Create New Account</h1>
+            {% if error %}
+            <p class="text-red-500 text-center mb-4">{{ error }}</p>
+            {% endif %}
+            <form method="POST" action="/signup">
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Email"
+                    class="block border border-grey-light w-full p-3 rounded mb-4 dark:text-zinc-100 dark:bg-zinc-700"
+                    required
+                />
+                <input
+                    type="text"
+                    id="user_name"
+                    name="user_name"
+                    placeholder="Username"
+                    class="block border border-grey-light w-full p-3 rounded mb-4 dark:text-zinc-100 dark:bg-zinc-700"
+                    required
+                />
+                <input
+                    type="text"
+                    id="first_name"
+                    name="first_name"
+                    placeholder="First Name"
+                    class="block border border-grey-light w-full p-3 rounded mb-4 dark:text-zinc-100 dark:bg-zinc-700"
+                    required
+                />
+                <input
+                    type="text"
+                    id="last_name"
+                    name="last_name"
+                    placeholder="Last Name"
+                    class="block border border-grey-light w-full p-3 rounded mb-4 dark:text-zinc-100 dark:bg-zinc-700"
+                    required
+                />
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    class="block border border-grey-light w-full p-3 rounded mb-4 dark:text-zinc-100 dark:bg-zinc-700"
+                    required
+                />
+                <select
+                    id="user_role"
+                    name="user_role"
+                    class="block border border-grey-light w-full p-3 rounded mb-4 dark:text-zinc-100 dark:bg-zinc-700"
+                >
+                    <option value="buyer">Buyer</option>
+                    <option value="seller">Seller</option>
+                    <!-- <option value="admin">Admin</option> -->
+                </select>
+                <div class="flex justify-between">
+                    <button
+                        type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        Sign Up
+                    </button>
+                    <a
+                        href="{{ url_for('home') }}"
+                        class="text-center text-sm text-blue-500 hover:text-blue-700"
+                    >
+                        Back to Home Page
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-900 dark:bg-zinc-800">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-4 text-white text-center">Admin Panel</h1>
+        
+        <div class="mb-8 text-center">
+            <a href="{{ url_for('home') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">
+                Back to Home Page
+            </a>
+            <a href="{{ url_for('logout_route') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Logout
+            </a>
+        </div>
+        
+        <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8 mb-8">
+            <h2 class="text-2xl font-bold mb-4">User Management</h2>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                         <!-- <th class="py-2 px-4 bg-blue-500 text-white">User ID</th> -->
+                        <th class="py-2 px-4 bg-blue-500 text-white">Email</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">UserName</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Name</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Role</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for email, user_data in users.items() %}
+                    <tr>
+                         <!-- <td class="py-2 px-4 border-b">{{ user_id }}</td> -->
+                        <td class="py-2 px-4 border-b">{{ email }}</td>
+                        <td class="py-2 px-4 border-b">{{ user_data.user_name }}</td>
+                        <td class="py-2 px-4 border-b">{{ user_data.first_name }} {{ user_data.last_name }}</td>
+                        <td class="py-2 px-4 border-b">{{ user_data.user_role }}</td>
+                        <td class="py-2 px-4 border-b">
+                            <form method="POST">
+                                <input type="hidden" name="email" value="{{ email }}">
+                                <button type="submit" name="delete_user" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                                    Delete
+                                </button>
+                            </form>
+                            <a href="{{ url_for('modify_user', email=email) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                                Modify
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{ url_for('insert_user') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-8 inline-block">
+                Insert User
+            </a>
+        </div>
+        
+        <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8 mb-8">
+            <h2 class="text-2xl font-bold mb-4">Product Management</h2>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Product ID</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Name</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Price</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Inventory</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item_id, product_data in products.items() %}
+                    <tr>
+                        <td class="py-2 px-4 border-b">{{ item_id }}</td>
+                        <td class="py-2 px-4 border-b">{{ product_data.item_name }}</td>
+                        <td class="py-2 px-4 border-b">{{ product_data.price }}</td>
+                        <td class="py-2 px-4 border-b">{{ product_data.inventory }}</td>
+                        <td class="py-2 px-4 border-b">
+                            <form method="POST">
+                                <input type="hidden" name="item_id" value="{{ item_id }}">
+                                <button type="submit" name="delete_product" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                                    Delete
+                                </button>
+                            </form>
+                            <a href="{{ url_for('modify_product', item_id=item_id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                                Modify
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{ url_for('insert_product') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-8 inline-block">
+                Insert Product
+            </a>
+        </div>
+        
+        <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8">
+            <h2 class="text-2xl font-bold mb-4">Order Management</h2>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Order ID</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Buyer</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Seller</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Product</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Status</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order_id, order_data in orders.items() %}
+                    <tr>
+                        <td class="py-2 px-4 border-b">{{ order_id }}</td>
+                        <td class="py-2 px-4 border-b">{{ order_data.buyer_id }}</td>
+                        <td class="py-2 px-4 border-b">{{ order_data.seller_id }}</td>
+                        <td class="py-2 px-4 border-b">{{ order_data.item_id }}</td>
+                        <td class="py-2 px-4 border-b">{{ order_data.status }}</td>
+                        <td class="py-2 px-4 border-b">
+                            <form method="POST">
+                                <input type="hidden" name="order_id" value="{{ order_id }}">
+                                <button type="submit" name="delete_order" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                                    Delete
+                                </button>
+                            </form>
+                            <a href="{{ url_for('modify_order', order_id=order_id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                                Modify
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{ url_for('insert_order') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-8 inline-block">
+                Insert Order
+            </a>
+        </div>
+    </div>
+</body>
+</html>

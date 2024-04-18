@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MarketSphere - Buyer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body class="bg-blue-900 dark:bg-zinc-800">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-4 text-white text-center">MarketSphere Buyer Portal</h1>
+        <p class="text-xl mb-8 text-center text-white">Welcome, {{ buyer.first_name }} {{ buyer.last_name }}!</p>
+        
+        <div class="mb-8 text-center">
+            <a href="{{ url_for('home') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">
+                Back to Home Page
+            </a>
+            <a href="{{ url_for('logout_route') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Logout
+            </a>
+        </div>
+
+        <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8 mb-8">
+            <h2 class="text-2xl font-bold mb-4">Search for Desired Products</h2>
+            <form method="GET" action="{{ url_for('buyer_route') }}" class="mb-4">
+                <input type="text" name="search" placeholder="Search products..." class="border rounded py-2 px-3 mr-2">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
+            </form>
+            <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for product in products %}
+                <div class="product bg-white dark:bg-zinc-800 shadow-md rounded p-4">
+                    <h3 class="text-xl font-bold mb-2">{{ product.item_name }}</h3>
+                    <p class="mb-2">{{ product.description }}</p>
+                    <p class="mb-4">Price: ${{ product.price }}</p>
+                    <p class="mb-2">Inventory: {{ product.inventory }}</p>
+                    <button class="add-to-cart bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" data-item-id="{{ product.item_id }}">
+                        Add to Cart
+                    </button>
+                    <!-- <button class="add-to-cart bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" data-item-id="{{ product.item_id }}">
+                        {% if product.inventory < 1 %}
+                            Out of Stock
+                        {% else %}
+                            Add to Cart
+                        {% endif %}
+                    </button> -->
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8 mb-8">
+            <h2 class="text-2xl font-bold mb-4">My Cart</h2>
+            <div id="cart"></div>
+        </div>
+        
+        <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8">
+            <h2 class="text-2xl font-bold mb-4">Order History</h2>
+            <!-- <div id="order-history"></div> -->
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Order ID</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Product</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Seller</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in order_history %}
+                    <tr>
+                        <td class="py-2 px-4 border-b">{{ order.order_id }}</td>
+                        <td class="py-2 px-4 border-b">
+                            {% if order.item_name %}
+                                {{ order.item_name }}
+                            {% else %}
+                                Product has been removed
+                            {% endif %}
+                        </td>
+                        <td class="py-2 px-4 border-b">{{ order.seller_id }}</td>
+                        <td class="py-2 px-4 border-b">{{ order.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('.add-to-cart').click(function() {
+                var itemId = $(this).data('item-id');
+                $.post('/add_to_cart', { item_id: itemId }, function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        // Update the cart display
+                        $.get('/get_cart', function(data) {
+                            $('#cart').html(data);
+                        });
+                    } else {
+                        alert(response.message);
+                    }
+                });
+            });
+    
+            $(document).on('click', '.remove-from-cart', function() {
+                var itemId = $(this).data('item-id');
+                $.post('/remove_from_cart', { item_id: itemId }, function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        // Update the cart display
+                        $.get('/get_cart', function(data) {
+                            $('#cart').html(data);
+                        });
+                    } else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            $(document).on('click', '#checkout-btn', function() {
+                $.post('/checkout', function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                });
+            });
+
+            // Load the cart items on page load
+            $.get('/get_cart', function(data) {
+                $('#cart').html(data);
+            });
+
+        });
+    </script>
+        
+</body>
+</html>
+

@@ -1,0 +1,13 @@
+{% for product in cart_items %}
+<div class="cart-item">
+    <h3 class="text-xl font-bold mb-2">{{ product.item_name }}</h3>
+    <p class="mb-2">{{ product.description }}</p>
+    <p class="mb-4">Price: ${{ product.price }}</p>
+    <button class="remove-from-cart bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" data-item-id="{{ product.item_id }}">
+        Remove
+    </button>
+</div>
+{% endfor %}
+<button id="checkout-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">
+    Checkout
+</button>

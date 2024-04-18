@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MarketSphere - Signin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="min-h-screen flex items-center justify-center bg-blue-900 dark:bg-zinc-800">
+      <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8 pt-8 w-96">
+        <h1 class="text-2xl text-center mb-4">MarketSphere Login</h1>
+        <form action="{{ url_for('signin_route') }}" method="POST">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              class="block border border-grey-light w-full p-3 rounded mb-4 dark:text-zinc-100 dark:bg-zinc-700"
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              class="block border border-grey-light w-full p-3 rounded mb-4 dark:text-zinc-100 dark:bg-zinc-700"
+              required
+            />
+            
+            <div class="flex justify-between">
+              <button
+                type="submit"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Sign In
+              </button>
+              <!-- <button
+                class="text-center text-sm text-blue-500 hover:text-blue-700"
+                onclick="goToHomePage()"
+              >
+                Back to Home Page
+              </button> -->
+              <a
+                href="{{ url_for('home') }}"
+                class="text-center text-sm text-blue-500 hover:text-blue-700"
+              >
+                Back to Home Page
+              </a>
+            </div>
+        </form>
+
+      </div>
+    </div>
+    <!-- <script>
+      function goToHomePage() {
+          // Redirect to home page
+          window.location.href = "home.html";
+      }
+    </script>   -->
+</body>
+</html>
+
+
+

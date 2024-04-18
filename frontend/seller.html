@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MarketSphere - Seller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="bg-blue-900 dark:bg-zinc-800">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-4 text-white text-center">MarketSphere Seller Portal</h1>
+        <p class="text-xl mb-8 text-center text-white">Welcome, {{ seller.first_name }} {{ seller.last_name }}!</p>
+
+        <div class="mb-8 text-center">
+            <a href="{{ url_for('home') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Back to Home Page
+            </a>
+            <a href="{{ url_for('logout_route') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Logout
+            </a>
+        </div>
+        
+        <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8 mb-8">
+            <h2 class="text-2xl font-bold mb-4">My Products</h2>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Product ID</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Name</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Price</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Category</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Inventory</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in product_listings %}
+                    <tr>
+                        <td class="py-2 px-4 border-b">{{ product.item_id }}</td>
+                        <td class="py-2 px-4 border-b">{{ product.item_name }}</td>
+                        <td class="py-2 px-4 border-b">{{ product.price }}</td>
+                        <td class="py-2 px-4 border-b">{{ product.category }}</td>
+                        <td class="py-2 px-4 border-b">{{ product.inventory }}</td>
+                        <td class="py-2 px-4 border-b">
+                            <!-- <form method="POST" action="{{ url_for('delete_product') }}"> -->
+                            <form method="POST" onsubmit="return deleteProduct(this);">
+                                <input type="hidden" name="item_id" value="{{ product.item_id }}">
+                                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                                    Delete
+                                </button>
+                            </form>
+                            <!-- <form method="POST" action="{{ url_for('update_inventory') }}"> -->
+                            <form method="POST" onsubmit="return updateInventory(this);">
+                                <input type="hidden" name="item_id" value="{{ product.item_id }}">
+                                <input type="number" name="new_inventory" min="0" value="{{ product.inventory }}" class="border rounded py-1 px-2 mr-2">
+                                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                                    Update Inventory
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
+        
+        <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8 mb-8">
+            <h2 class="text-2xl font-bold mb-4">Create New Product</h2>
+            <a href="{{ url_for('create_product') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Create Product
+            </a>
+        </div>
+        
+        <div class="bg-white dark:bg-zinc-900 shadow-md rounded px-8 py-8">
+            <h2 class="text-2xl font-bold mb-4">Order History</h2>
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Order ID</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Product</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Buyer</th>
+                        <th class="py-2 px-4 bg-blue-500 text-white">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in order_history %}
+                    <tr>
+                        <td class="py-2 px-4 border-b">{{ order.order_id }}</td>
+                        <td class="py-2 px-4 border-b">
+                            {% if order.item_name %}
+                                {{ order.item_name }}
+                            {% else %}
+                                Product has been removed
+                            {% endif %}
+                        </td>
+                        <td class="py-2 px-4 border-b">{{ order.buyer_id }}</td>
+                        <td class="py-2 px-4 border-b">{{ order.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+       function deleteProduct(form) {
+            var itemId = form.elements['item_id'].value;
+            $.post('/delete_product', { item_id: itemId }, function(response) {
+                if (response.success) {
+                    alert(response.message);
+                    location.reload(); // Reload the page after successful deletion
+                } else {
+                    alert('Failed to delete the product.');
+                }
+            });
+            return false; // Prevent form submission
+        }
+
+        function updateInventory(form) {
+            var itemId = form.elements['item_id'].value;
+            var newInventory = form.elements['new_inventory'].value;
+            $.post('/update_inventory', { item_id: itemId, new_inventory: newInventory }, function(response) {
+                if (response.success) {
+                    alert(response.message);
+                    location.reload(); // Reload the page after successful update
+                } else {
+                    alert('Failed to update the inventory.');
+                }
+            });
+            return false; // Prevent form submission
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{% for order in order_history %}
+<tr>
+    <td class="py-2 px-4 border-b">{{ order.order_id }}</td>
+    <td class="py-2 px-4 border-b">
+        {% if order.item_name %}
+            {{ order.item_name }}
+        {% else if order.item_id %}
+        {{ order.item_id }}
+        {% else %}
+            Product has been removed
+        {% endif %}
+    </td>
+    <td class="py-2 px-4 border-b">{{ order.seller_id }}</td>
+    <td class="py-2 px-4 border-b">{{ order.status }}</td>
+</tr>
+{% endfor %}
