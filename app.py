@@ -255,6 +255,8 @@ def buyer_route():
             success, products = browse_products_by_category("")  # Retrieve all products
         
         if success:
+            for product in products:
+                product.inventory = int(getattr(product, 'inventory', 0))
             success, order_history = buyer.get_order_history()
             if success:
                 return render_template('buyer.html', buyer=buyer, products=products, order_history=order_history)
