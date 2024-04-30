@@ -173,6 +173,8 @@ class Seller(User):
     
     def get_order_history(self):
         db_manager = DBManager()
+        if self.order_history is None:
+            return (True, [])
         order_ids = self.order_history["order_history"]
         orders = []
         for order_id in order_ids:
